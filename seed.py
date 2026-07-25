@@ -8,8 +8,8 @@ def run_seed():
     with app.app_context():
 
         # Proteção contra re-execução: se já existir dados, não faz nada.
-        if User.query.first():
-            print("⚠️  Banco já possui dados. Seed ignorado para evitar duplicatas.")
+        if Property.query.first():
+            print("⚠️  Imóveis já cadastrados. Seed ignorado para evitar duplicatas.")
             return
 
         print("Povoando dados iniciais para Vila dos Cabanos (Barcarena - PA)...")
