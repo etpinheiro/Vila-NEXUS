@@ -24,6 +24,13 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     csrf.init_app(app)
 
+    # Cria tabelas automaticamente ao iniciar.
+    # - Em produção (Supabase/PostgreSQL): cria todas as tabelas no banco remoto
+    #   caso ainda não existam, sem apagar dados existentes.
+    # - Em desenvolvimento (SQLite local): mesmo comportamento, sem efeitos colaterais.
+    with app.app_context():
+        db.create_all()
+
     # Register Blueprints
     from app.blueprints.main import main_bp
     from app.blueprints.auth import auth_bp
