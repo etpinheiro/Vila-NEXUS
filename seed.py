@@ -1,5 +1,4 @@
 import os
-import shutil
 from app import create_app, db
 from app.models import User, Company, CompanyRegistrationRequest, Property, PropertyImage, Favorite, VisitRequest
 
@@ -7,9 +6,11 @@ app = create_app()
 
 def run_seed():
     with app.app_context():
-        print("Re-criando tabelas do banco de dados (SQLite local / SQL Server ready)...")
-        db.drop_all()
-        db.create_all()
+
+        # Proteção contra re-execução: se já existir dados, não faz nada.
+        if User.query.first():
+            print("⚠️  Banco já possui dados. Seed ignorado para evitar duplicatas.")
+            return
 
         print("Povoando dados iniciais para Vila dos Cabanos (Barcarena - PA)...")
 
@@ -100,7 +101,7 @@ def run_seed():
 
         db.session.add_all([emp_user1, emp_user2, client_user])
 
-        # 5. Solicitações Comerciais Pendentes (Fluxo de Lead de Empresário)
+        # 5. Solicitações Comerciais Pendentes
         req1 = CompanyRegistrationRequest(
             company_name="Amazonia Real Estate & Flat Services",
             contact_person="Roberto Silva",
@@ -127,7 +128,7 @@ def run_seed():
 
         db.session.add_all([req1, req2])
 
-        # 6. Imóveis de Exemplo em Vila dos Cabanos
+        # 6. Imóveis de Exemplo
         p1 = Property(
             title="Casa Residencial 3 Quartos com Piscina e Varanda Gourmet",
             purpose="Venda",
@@ -136,18 +137,10 @@ def run_seed():
             neighborhood="Vila dos Cabanos",
             address="Rua Sete de Setembro, nº 142 - Vila dos Cabanos",
             description="Excelente casa com acabamento de alto padrão em Vila dos Cabanos. Possui 3 quartos sendo 1 suíte master com closet, sala ampla em 2 ambientes, cozinha planejada, varanda gourmet com churrasqueira e piscina privativa. Garagem coberta para 2 carros. Próxima a supermercados, farmácias e escolas.",
-            bedrooms=3,
-            bathrooms=3,
-            suites=1,
-            parking_spaces=2,
-            area_sqm=180.0,
+            bedrooms=3, bathrooms=3, suites=1, parking_spaces=2, area_sqm=180.0,
             features="Piscina, Churrasqueira, Varanda Gourmet, Ar Condicionado, Garagem Coberta, Portão Eletrônico, Móveis Planejados",
-            company_id=comp1.id,
-            phone="(91) 98111-2233",
-            email="contato@cabanosprime.com.br",
-            status="disponivel",
-            is_highlighted=True,
-            views_count=142
+            company_id=comp1.id, phone="(91) 98111-2233", email="contato@cabanosprime.com.br",
+            status="disponivel", is_highlighted=True, views_count=142
         )
 
         p2 = Property(
@@ -158,18 +151,10 @@ def run_seed():
             neighborhood="Vila dos Cabanos",
             address="Av. D. Pedro II, Edifício Cabanos Tower, Apto 402",
             description="Apartamento 100% mobiliado ideal para executivos e profissionais das indústrias de Barcarena. Conta com 2 quartos climatizados, sala com Smart TV, cozinha equipada com eletrodomésticos, área de serviço e varanda ventilada. Condomínio fechado com portaria 24 horas e elevador.",
-            bedrooms=2,
-            bathrooms=2,
-            suites=1,
-            parking_spaces=1,
-            area_sqm=75.0,
+            bedrooms=2, bathrooms=2, suites=1, parking_spaces=1, area_sqm=75.0,
             features="100% Mobiliado, Ar Condicionado, Elevador, Portaria 24h, Wi-Fi Incluso, Garagem, Varanda",
-            company_id=comp1.id,
-            phone="(91) 98111-2233",
-            email="contato@cabanosprime.com.br",
-            status="disponivel",
-            is_highlighted=True,
-            views_count=210
+            company_id=comp1.id, phone="(91) 98111-2233", email="contato@cabanosprime.com.br",
+            status="disponivel", is_highlighted=True, views_count=210
         )
 
         p3 = Property(
@@ -179,19 +164,11 @@ def run_seed():
             price=280.00,
             neighborhood="Praia do Caripi",
             address="Av. Beira Mar, s/nº - Orla da Praia do Caripi",
-            description="Hospede-se na melhor localização da Praia do Caripi! Suíte luxo com cama queen size, ar condicionado split, frigobar, TV a cabo e varanda privativa com vista panorâmica para a praia. Diária inclui café da manhã regional completo com sucos de frutas locais e tapiocas feitas na hora.",
-            bedrooms=1,
-            bathrooms=1,
-            suites=1,
-            parking_spaces=1,
-            area_sqm=32.0,
+            description="Hospede-se na melhor localização da Praia do Caripi! Suíte luxo com cama queen size, ar condicionado split, frigobar, TV a cabo e varanda privativa com vista panorâmica para a praia. Diária inclui café da manhã regional completo.",
+            bedrooms=1, bathrooms=1, suites=1, parking_spaces=1, area_sqm=32.0,
             features="Frente para o Mar, Café da Manhã Incluso, Ar Condicionado, Frigobar, Wi-Fi, Estacionamento Privativo",
-            company_id=comp2.id,
-            phone="(91) 98444-5566",
-            email="reserva@pousadasolmar.com.br",
-            status="disponivel",
-            is_highlighted=True,
-            views_count=350
+            company_id=comp2.id, phone="(91) 98444-5566", email="reserva@pousadasolmar.com.br",
+            status="disponivel", is_highlighted=True, views_count=350
         )
 
         p4 = Property(
@@ -201,23 +178,13 @@ def run_seed():
             price=220000.00,
             neighborhood="Novo Paraíso",
             address="Rua Germano Aranha, s/nº",
-            description="Terreno totalmente plano e escriturado medindo 15m x 33m (500m²) em rua pavimentada e com infraestrutura completa de água e luz. Excelente investimento para construção de galpão comercial, pousada ou vila de kitnets para locação.",
-            bedrooms=0,
-            bathrooms=0,
-            suites=0,
-            parking_spaces=0,
-            area_sqm=500.0,
+            description="Terreno totalmente plano e escriturado medindo 15m x 33m (500m²) em rua pavimentada e com infraestrutura completa de água e luz.",
+            bedrooms=0, bathrooms=0, suites=0, parking_spaces=0, area_sqm=500.0,
             features="Terreno Plano, Escriturado, Rua Pavimentada, Rede de Água, Energia Elétrica",
-            company_id=comp3.id,
-            phone="(91) 98888-7766",
-            email="vendas@barcarenaimoveis.com.br",
-            status="disponivel",
-            is_highlighted=False,
-            views_count=85
+            company_id=comp3.id, phone="(91) 98888-7766", email="vendas@barcarenaimoveis.com.br",
+            status="disponivel", is_highlighted=False, views_count=85
         )
 
-        # Imóveis extras para garantir que toda combinação de filtro (finalidade x tipo)
-        # tenha pelo menos um resultado de exemplo.
         p5 = Property(
             title="Casa de Temporada Beira-Mar no Caripi",
             purpose="Temporada",
@@ -225,19 +192,11 @@ def run_seed():
             price=350.00,
             neighborhood="Praia do Caripi",
             address="Travessa da Orla, nº 45 - Praia do Caripi",
-            description="Casa de temporada a 100m da praia, ideal para famílias e grupos. 3 quartos, cozinha completa, área externa com rede e churrasqueira. Diária com taxa de limpeza inclusa.",
-            bedrooms=3,
-            bathrooms=2,
-            suites=1,
-            parking_spaces=2,
-            area_sqm=140.0,
+            description="Casa de temporada a 100m da praia, ideal para famílias e grupos. 3 quartos, cozinha completa, área externa com rede e churrasqueira.",
+            bedrooms=3, bathrooms=2, suites=1, parking_spaces=2, area_sqm=140.0,
             features="Perto da Praia, Churrasqueira, Rede, Cozinha Completa, Wi-Fi, Ventilador de Teto",
-            company_id=comp2.id,
-            phone="(91) 98444-5566",
-            email="reserva@pousadasolmar.com.br",
-            status="disponivel",
-            is_highlighted=True,
-            views_count=97
+            company_id=comp2.id, phone="(91) 98444-5566", email="reserva@pousadasolmar.com.br",
+            status="disponivel", is_highlighted=True, views_count=97
         )
 
         p6 = Property(
@@ -247,19 +206,11 @@ def run_seed():
             price=210.00,
             neighborhood="Centro Barcarena",
             address="Av. Barão do Rio Branco, nº 310 - Centro",
-            description="Suíte executiva no coração de Barcarena, próxima ao comércio e à sede das indústrias. Ar condicionado, frigobar, TV a cabo, Wi-Fi de alta velocidade e café da manhã incluso.",
-            bedrooms=1,
-            bathrooms=1,
-            suites=1,
-            parking_spaces=1,
-            area_sqm=28.0,
+            description="Suíte executiva no coração de Barcarena, próxima ao comércio e à sede das indústrias.",
+            bedrooms=1, bathrooms=1, suites=1, parking_spaces=1, area_sqm=28.0,
             features="Café da Manhã Incluso, Ar Condicionado, Frigobar, Wi-Fi, Estacionamento",
-            company_id=comp2.id,
-            phone="(91) 98444-5566",
-            email="reserva@pousadasolmar.com.br",
-            status="disponivel",
-            is_highlighted=False,
-            views_count=64
+            company_id=comp2.id, phone="(91) 98444-5566", email="reserva@pousadasolmar.com.br",
+            status="disponivel", is_highlighted=False, views_count=64
         )
 
         p7 = Property(
@@ -270,18 +221,10 @@ def run_seed():
             neighborhood="Distrito Industrial",
             address="Rodovia Barcarena-Murucupi, Km 8 - Distrito Industrial",
             description="Galpão comercial com pé direito alto, ideal para logística ou pequena indústria. Área de escritório anexa, pátio para manobra de caminhões e portão eletrônico.",
-            bedrooms=0,
-            bathrooms=1,
-            suites=0,
-            parking_spaces=6,
-            area_sqm=300.0,
+            bedrooms=0, bathrooms=1, suites=0, parking_spaces=6, area_sqm=300.0,
             features="Pé Direito Alto, Pátio de Manobra, Escritório Anexo, Portão Eletrônico",
-            company_id=comp3.id,
-            phone="(91) 98888-7766",
-            email="vendas@barcarenaimoveis.com.br",
-            status="disponivel",
-            is_highlighted=False,
-            views_count=41
+            company_id=comp3.id, phone="(91) 98888-7766", email="vendas@barcarenaimoveis.com.br",
+            status="disponivel", is_highlighted=False, views_count=41
         )
 
         p8 = Property(
@@ -292,24 +235,16 @@ def run_seed():
             neighborhood="Centro Barcarena",
             address="Rua Quinze de Novembro, nº 77 - Centro",
             description="Apartamento compacto e bem localizado, ótimo para solteiros ou casais. Próximo a bancos, farmácias e transporte público.",
-            bedrooms=1,
-            bathrooms=1,
-            suites=0,
-            parking_spaces=1,
-            area_sqm=42.0,
+            bedrooms=1, bathrooms=1, suites=0, parking_spaces=1, area_sqm=42.0,
             features="Próximo ao Centro, Portaria, Elevador",
-            company_id=comp1.id,
-            phone="(91) 98111-2233",
-            email="contato@cabanosprime.com.br",
-            status="disponivel",
-            is_highlighted=False,
-            views_count=58
+            company_id=comp1.id, phone="(91) 98111-2233", email="contato@cabanosprime.com.br",
+            status="disponivel", is_highlighted=False, views_count=58
         )
 
         db.session.add_all([p1, p2, p3, p4, p5, p6, p7, p8])
         db.session.flush()
 
-        # Adicionar imagens placeholder para os imóveis de teste
+        # Imagens placeholder
         for p in [p1, p2, p3, p4, p5, p6, p7, p8]:
             img = PropertyImage(
                 property_id=p.id,
@@ -319,7 +254,7 @@ def run_seed():
             )
             db.session.add(img)
 
-        # Adicionar 1 favorito de demonstração
+        # Favorito de demonstração
         fav = Favorite(user_id=client_user.id, property_id=p1.id)
         db.session.add(fav)
 
