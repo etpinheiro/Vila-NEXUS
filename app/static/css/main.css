@@ -1,0 +1,673 @@
+/* ==========================================================================
+   VILA NEXUS - TROPICAL BRUTALISM DESIGN SYSTEM
+   Barcarena / Vila dos Cabanos - Pará
+   Palette:
+     --vn-obsidian: #1A1A1A (Dark Charcoal / Structural Borders)
+     --vn-copper:   #B87333 (Metallic Warm Copper)
+     --vn-sand:     #F9FAF9 (Off-White Sand Background)
+     --vn-emerald:  #0B3D2E (Amazonian Deep Forest Green)
+   ========================================================================== */
+
+:root {
+  --vn-obsidian: #1A1A1A;
+  --vn-copper: #B87333;
+  --vn-copper-hover: #9E6028;
+  --vn-sand: #F9FAF9;
+  --vn-sand-card: #FFFFFF;
+  --vn-emerald: #0B3D2E;
+  --vn-emerald-light: #145944;
+  --vn-muted: #6C757D;
+  --vn-border-width: 2px;
+  --vn-shadow: 5px 5px 0px var(--vn-obsidian);
+  --vn-shadow-lg: 8px 8px 0px var(--vn-obsidian);
+  --vn-shadow-copper: 5px 5px 0px var(--vn-copper);
+  --vn-radius: 18px;
+  --vn-radius-btn: 12px;
+  --vn-radius-badge: 8px;
+}
+
+/* Global Font Imports */
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--vn-sand);
+  color: var(--vn-obsidian);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6,
+.font-heading,
+.navbar-brand,
+.btn-brutalist {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--vn-obsidian);
+}
+
+/* Brutalist Card Styles */
+.card-brutalist {
+  background-color: var(--vn-sand-card);
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: var(--vn-shadow);
+  border-radius: var(--vn-radius);
+  transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+  overflow: hidden;
+}
+
+.card-brutalist:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--vn-shadow-lg);
+}
+
+.card-brutalist-emerald {
+  background-color: var(--vn-emerald);
+  color: #FFFFFF;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: var(--vn-shadow);
+}
+
+.card-brutalist-emerald h1,
+.card-brutalist-emerald h2,
+.card-brutalist-emerald h3,
+.card-brutalist-emerald h4,
+.card-brutalist-emerald h5,
+.card-brutalist-emerald h6 {
+  color: #FFFFFF;
+}
+
+.card-brutalist-copper {
+  background-color: var(--vn-copper);
+  color: #FFFFFF;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: var(--vn-shadow);
+}
+
+/* Brutalist Buttons */
+.btn-vn-copper {
+  background-color: var(--vn-copper);
+  color: #FFFFFF !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: 3px 3px 0px var(--vn-obsidian);
+  border-radius: var(--vn-radius-btn);
+  padding: 0.6rem 1.4rem;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-vn-copper:hover {
+  background-color: var(--vn-copper-hover);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--vn-obsidian);
+}
+
+.btn-vn-emerald {
+  background-color: var(--vn-emerald);
+  color: #FFFFFF !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: 3px 3px 0px var(--vn-obsidian);
+  border-radius: var(--vn-radius-btn);
+  padding: 0.6rem 1.4rem;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-vn-emerald:hover {
+  background-color: var(--vn-emerald-light);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--vn-obsidian);
+}
+
+.btn-vn-obsidian {
+  background-color: var(--vn-obsidian);
+  color: #FFFFFF !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  border: var(--vn-border-width) solid var(--vn-copper);
+  box-shadow: 3px 3px 0px var(--vn-copper);
+  border-radius: var(--vn-radius-btn);
+  padding: 0.6rem 1.4rem;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-vn-obsidian:hover {
+  background-color: #000000;
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--vn-copper);
+}
+
+.btn-vn-outline {
+  background-color: #FFFFFF;
+  color: var(--vn-obsidian) !important;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: 3px 3px 0px var(--vn-obsidian);
+  border-radius: var(--vn-radius-btn);
+  padding: 0.6rem 1.4rem;
+  transition: all 0.15s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-vn-outline:hover {
+  background-color: var(--vn-sand);
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0px var(--vn-obsidian);
+}
+
+/* Navbar */
+.navbar-vn {
+  background-color: var(--vn-obsidian);
+  border-bottom: 4px solid var(--vn-copper);
+  padding: 0.8rem 1rem;
+}
+
+.navbar-vn .navbar-brand {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: #FFFFFF !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar-vn .navbar-brand span {
+  color: var(--vn-copper);
+}
+
+.navbar-vn .nav-link {
+  color: #E0E0E0 !important;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  margin: 0 0.3rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--vn-radius-btn);
+  transition: all 0.2s;
+}
+
+.navbar-vn .nav-link:hover,
+.navbar-vn .nav-link.active {
+  color: #FFFFFF !important;
+  background-color: rgba(184, 115, 51, 0.2);
+  border-bottom: 2px solid var(--vn-copper);
+}
+
+/* Hero Section */
+.hero-tropical {
+  background: linear-gradient(135deg, var(--vn-obsidian) 0%, var(--vn-emerald) 100%);
+  color: #FFFFFF;
+  position: relative;
+  padding: 4rem 1rem 5rem 1rem;
+  border-bottom: 5px solid var(--vn-copper);
+  overflow: hidden;
+}
+
+.hero-tropical::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(184, 115, 51, 0.25) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 900;
+  line-height: 1.1;
+  color: #FFFFFF;
+  margin-bottom: 1.2rem;
+}
+
+.hero-title span {
+  color: var(--vn-copper);
+  background: linear-gradient(90deg, #B87333 0%, #E6A265 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.search-box-brutalist {
+  background-color: #FFFFFF;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: 6px 6px 0px var(--vn-copper);
+  border-radius: var(--vn-radius);
+  padding: 1.5rem;
+  color: var(--vn-obsidian);
+}
+
+/* Badges */
+.badge-vn {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.35em 0.7em;
+  border: 2px solid var(--vn-obsidian);
+  border-radius: var(--vn-radius-badge);
+  font-size: 0.75rem;
+}
+
+.badge-vn-venda {
+  background-color: var(--vn-copper);
+  color: #FFFFFF;
+}
+
+.badge-vn-aluguel {
+  background-color: var(--vn-emerald);
+  color: #FFFFFF;
+}
+
+.badge-vn-temporada {
+  background-color: #E67E22;
+  color: #FFFFFF;
+}
+
+.badge-vn-hospedagem {
+  background-color: #2980B9;
+  color: #FFFFFF;
+}
+
+.badge-vn-destaque {
+  background-color: #F1C40F;
+  color: var(--vn-obsidian);
+  box-shadow: 2px 2px 0px var(--vn-obsidian);
+}
+
+/* Form Controls Brutalist */
+.form-control, .form-select {
+  border: var(--vn-border-width) solid var(--vn-obsidian) !important;
+  border-radius: var(--vn-radius-btn) !important;
+  padding: 0.65rem 0.9rem;
+  font-weight: 500;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--vn-copper) !important;
+  box-shadow: 3px 3px 0px var(--vn-copper) !important;
+  outline: none;
+}
+
+/* Property Image Slider & Thumbnails */
+.property-img-container {
+  position: relative;
+  height: 240px;
+  background-color: #E9ECEF;
+  overflow: hidden;
+}
+
+.property-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.card-brutalist:hover .property-img-container img {
+  transform: scale(1.05);
+}
+
+/* Horizontal Property Carousel (Home highlights) */
+.property-carousel {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.5rem 1rem 1.5rem 1rem;
+  margin: 0 -1rem;
+  scroll-padding-left: 1rem;
+}
+
+.property-carousel::-webkit-scrollbar {
+  height: 8px;
+}
+
+.property-carousel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.property-carousel::-webkit-scrollbar-thumb {
+  background-color: var(--vn-copper);
+  border-radius: 10px;
+}
+
+.property-carousel-item {
+  flex: 0 0 auto;
+  width: 320px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 991px) {
+  .property-carousel-item {
+    width: 300px;
+  }
+}
+
+@media (max-width: 576px) {
+  .property-carousel {
+    gap: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin: 0 -0.75rem;
+  }
+  .property-carousel-item {
+    width: 80%;
+  }
+}
+
+.price-tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--vn-emerald);
+}
+
+/* Filter Toggle (Retractable Filters Panel) */
+.filter-toggle-btn {
+  border-radius: var(--vn-radius) !important;
+}
+.filter-toggle-btn[aria-expanded="true"] {
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+.filter-toggle-icon {
+  transition: transform 0.2s ease;
+  color: var(--vn-copper);
+}
+.filter-toggle-btn[aria-expanded="true"] .filter-toggle-icon {
+  transform: rotate(180deg);
+}
+
+/* Property Detail Gallery */
+.property-gallery-main {
+  height: 480px;
+}
+
+@media (max-width: 768px) {
+  .property-gallery-main {
+    height: 260px;
+  }
+}
+
+@media (max-width: 400px) {
+  .property-gallery-main {
+    height: 220px;
+  }
+}
+
+/* Footer */
+.footer-vn {
+  background-color: var(--vn-obsidian);
+  color: #E0E0E0;
+  border-top: 5px solid var(--vn-copper);
+  padding: 3rem 1rem 1.5rem 1rem;
+  margin-top: 4rem;
+}
+
+.footer-vn h5 {
+  color: #FFFFFF;
+  margin-bottom: 1.2rem;
+}
+
+.footer-vn a {
+  color: #B0B0B0;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-vn a:hover {
+  color: var(--vn-copper);
+}
+
+/* Stats counter card */
+.stat-card {
+  background: #FFFFFF;
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: var(--vn-shadow);
+  padding: 1.5rem;
+  text-align: center;
+  border-radius: var(--vn-radius);
+}
+
+.stat-number {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--vn-copper);
+  line-height: 1;
+}
+
+/* Custom Table Brutalist */
+.table-brutalist {
+  border: var(--vn-border-width) solid var(--vn-obsidian);
+  box-shadow: var(--vn-shadow);
+  border-radius: var(--vn-radius);
+  overflow: hidden;
+  background-color: #FFFFFF;
+}
+
+.table-brutalist thead {
+  background-color: var(--vn-obsidian);
+  color: #FFFFFF;
+  font-family: 'Outfit', sans-serif;
+}
+
+.table-brutalist th {
+  padding: 0.9rem;
+  border-bottom: 3px solid var(--vn-copper);
+}
+
+.table-brutalist td {
+  padding: 0.8rem;
+  vertical-align: middle;
+  border-bottom: 1px solid #E0E0E0;
+}
+
+/* ==========================================================================
+   Responsive adjustments (Mobile)
+   Mantém a identidade visual (cores, bordas, sombras deslocadas, fontes),
+   apenas reduz proporções para caber melhor em telas pequenas.
+   ========================================================================== */
+@media (max-width: 768px) {
+  :root {
+    /* Sombras e bordas brutalistas menores, mesma linguagem visual */
+    --vn-border-width: 2px;
+    --vn-shadow: 3px 3px 0px var(--vn-obsidian);
+    --vn-shadow-lg: 4px 4px 0px var(--vn-obsidian);
+    --vn-shadow-copper: 3px 3px 0px var(--vn-copper);
+  }
+
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Navbar */
+  .navbar-vn {
+    padding: 0.6rem 0.8rem;
+  }
+  .navbar-vn .navbar-brand {
+    font-size: 1.25rem;
+  }
+  .navbar-vn .nav-link {
+    margin: 0;
+    padding: 0.6rem 0.4rem;
+  }
+
+  /* Hero */
+  .hero-tropical {
+    padding: 2.5rem 0.25rem 3rem 0.25rem;
+    border-bottom-width: 3px;
+  }
+  .hero-title {
+    font-size: 1.9rem;
+    margin-bottom: 1rem;
+  }
+  .hero-tropical .lead {
+    font-size: 1rem;
+  }
+  .hero-tropical .badge {
+    font-size: 0.7rem;
+    padding: 0.4em 0.7em;
+  }
+  .hero-tropical .btn-lg {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.1rem;
+  }
+
+  .search-box-brutalist {
+    padding: 1.1rem;
+    box-shadow: 4px 4px 0px var(--vn-copper);
+  }
+  .search-box-brutalist h3 {
+    font-size: 1.15rem;
+  }
+
+  /* Buttons in general take less padding/shadow on mobile */
+  .btn-vn-copper, .btn-vn-emerald, .btn-vn-obsidian, .btn-vn-outline {
+    padding: 0.5rem 1rem;
+    box-shadow: 2px 2px 0px var(--vn-obsidian);
+    font-size: 0.9rem;
+  }
+  .btn-vn-obsidian {
+    box-shadow: 2px 2px 0px var(--vn-copper);
+  }
+  .btn-vn-copper:hover, .btn-vn-emerald:hover, .btn-vn-outline:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--vn-obsidian);
+  }
+
+  /* Cards */
+  .card-brutalist:hover {
+    transform: none;
+    box-shadow: var(--vn-shadow);
+  }
+  .property-img-container {
+    height: 170px;
+  }
+  .price-tag {
+    font-size: 1.2rem;
+  }
+
+  /* Stats */
+  .stat-card {
+    padding: 1rem;
+  }
+  .stat-number {
+    font-size: 1.8rem;
+  }
+
+  /* Footer */
+  .footer-vn {
+    padding: 2rem 1rem 1rem 1rem;
+    margin-top: 2.5rem;
+    text-align: center;
+  }
+  .footer-vn .d-flex.gap-2 {
+    justify-content: center;
+  }
+
+  /* Tables */
+  .table-brutalist th,
+  .table-brutalist td {
+    padding: 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  /* Large Bootstrap display headings used across the site */
+  .display-6 {
+    font-size: 1.6rem;
+  }
+  .display-3 {
+    font-size: 2.2rem;
+  }
+  .display-1 {
+    font-size: 3rem;
+  }
+
+  /* Property detail specs grid (quartos/banheiros/vagas/área) */
+  .property-specs-grid i.fa-2x {
+    font-size: 1.3em;
+  }
+  .property-specs-grid .fs-5 {
+    font-size: 1rem !important;
+  }
+
+  /* Compress generic Bootstrap vertical spacing so pages feel native/compact
+     on mobile instead of "shrunk desktop" — this is the biggest contributor
+     to the "too big / not made for mobile" feeling. */
+  section.py-5, div.py-5 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  section.py-4, div.py-4 {
+    padding-top: 1.25rem !important;
+    padding-bottom: 1.25rem !important;
+  }
+  .mb-5 {
+    margin-bottom: 2rem !important;
+  }
+  .card-brutalist.p-4,
+  .card.card-brutalist .p-4 {
+    padding: 1.25rem !important;
+  }
+
+  /* Breadcrumb: smaller, single line, no wasted height */
+  .breadcrumb {
+    font-size: 0.8rem;
+    margin-bottom: 0.75rem !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Price/contact box shouldn't float mid-page on mobile since it's already
+     stacked below the gallery, not side-by-side */
+  .property-price-box.sticky-top {
+    position: static;
+    top: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-title {
+    font-size: 1.6rem;
+  }
+  .navbar-vn .navbar-brand {
+    font-size: 1.1rem;
+  }
+  .property-img-container {
+    height: 150px;
+  }
+}

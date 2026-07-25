@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-tropical">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <span class="badge bg-warning text-dark font-heading px-3 py-2 border border-2 border-dark mb-3">
+          <i class="fa-solid fa-location-dot me-1"></i> Exclusivo Vila dos Cabanos - Barcarena/PA
+        </span>
+        <h1 class="hero-title">
+          O Seu Portal Imobiliário & Hospedagem em <span>Vila dos Cabanos</span>
+        </h1>
+        <p class="lead mb-4 text-white-50">
+          Encontre imóveis para comprar, alugar mensalmente, alugar por temporada ou acomodações em hotéis e pousadas com os melhores anunciantes de Barcarena.
+        </p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="{{ url_for('main.properties') }}" class="btn btn-vn-copper btn-lg">
+            <i class="fa-solid fa-magnifying-glass me-2"></i> Ver Todos os Imóveis
+          </a>
+          <a href="{{ url_for('main.request_company_registration') }}" class="btn btn-vn-outline btn-lg">
+            <i class="fa-solid fa-store me-2"></i> Cadastrar Minha Imobiliária / Hotel
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Search Card Brutalist -->
+      <div class="col-lg-5">
+        <div class="search-box-brutalist fade-in-up">
+          <h3 class="font-heading fw-bold mb-3 text-dark">
+            <i class="fa-solid fa-filter text-warning me-2"></i> Busca Rápida
+          </h3>
+          <form action="{{ url_for('main.properties') }}" method="GET">
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Finalidade</label>
+              <select name="purpose" class="form-select">
+                <option value="">Todas as finalidades</option>
+                <option value="Venda">Venda</option>
+                <option value="Aluguel">Aluguel Mensal</option>
+                <option value="Temporada">Temporada</option>
+                <option value="Hospedagem">Hospedagem (Hotel/Pousada)</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold small">Bairro em Barcarena</label>
+              <select name="neighborhood" class="form-select">
+                <option value="">Todos os bairros</option>
+                {% for n in neighborhoods %}
+                  <option value="{{ n }}">{{ n }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label fw-semibold small">Tipo de Imóvel</label>
+                <select name="property_type" class="form-select">
+                  <option value="">Todos</option>
+                  <option value="Casa">Casa</option>
+                  <option value="Apartamento">Apartamento</option>
+                  <option value="Pousada/Quarto">Pousada/Quarto</option>
+                  <option value="Hotel/Suíte">Hotel/Suíte</option>
+                  <option value="Terreno">Terreno</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label class="form-label fw-semibold small">Quartos mín.</label>
+                <select name="bedrooms" class="form-select">
+                  <option value="">Qualquer</option>
+                  <option value="1">1+</option>
+                  <option value="2">2+</option>
+                  <option value="3">3+</option>
+                  <option value="4">4+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-vn-emerald w-100 py-2">
+              <i class="fa-solid fa-search me-1"></i> Buscar Imóveis Agora
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Counters Bar -->
+<section class="py-4 bg-white border-bottom border-3 border-dark">
+  <div class="container">
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number">{{ total_properties }}</div>
+          <div class="fw-bold text-dark font-heading">Imóveis Ativos Disponíveis</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number" style="color: var(--vn-emerald);">{{ total_companies }}</div>
+          <div class="fw-bold text-dark font-heading">Imobiliárias e Hotéis Parceiros</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card">
+          <div class="stat-number" style="color: #E67E22;">{{ total_rentals }}</div>
+          <div class="fw-bold text-dark font-heading">Aluguéis & Hospedagens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Highlighted Listings -->
+<section class="py-5">
+  <div class="container-fluid px-3 px-md-4">
+    <div class="d-flex justify-content-between align-items-end mb-3 container px-0">
+      <div>
+        <span class="badge badge-vn badge-vn-destaque mb-2"><i class="fa-solid fa-star me-1"></i> Destaques da Semana</span>
+        <h2 class="font-heading fw-bold mb-0">Imóveis em Destaque em Vila dos Cabanos</h2>
+        <p class="text-muted small mb-0 mt-1 d-md-none"><i class="fa-solid fa-arrows-left-right me-1"></i> Deslize para o lado para ver mais</p>
+      </div>
+      <a href="{{ url_for('main.properties') }}" class="btn btn-vn-outline btn-sm d-none d-md-inline-flex">
+        Ver Todos <i class="fa-solid fa-arrow-right ms-1"></i>
+      </a>
+    </div>
+
+    <div class="property-carousel">
+      {% for prop in highlighted_properties %}
+        <div class="property-carousel-item">
+          <div class="card card-brutalist h-100">
+            <div class="property-img-container">
+              <img src="{{ prop.primary_image_url() }}" alt="{{ prop.title }}">
+              
+              <div class="position-absolute top-0 start-0 m-2 d-flex flex-column gap-1">
+                <span class="badge badge-vn badge-vn-{{ prop.purpose.lower() }}">{{ prop.purpose }}</span>
+                {% if prop.is_highlighted %}
+                  <span class="badge badge-vn badge-vn-destaque"><i class="fa-solid fa-bolt"></i> Destaque</span>
+                {% endif %}
+              </div>
+
+              <div class="position-absolute top-0 end-0 m-2">
+                <button class="favorite-btn {% if prop.id in user_favorite_ids %}active{% endif %}" data-property-id="{{ prop.id }}" title="Favoritar">
+                  <i class="{% if prop.id in user_favorite_ids %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="card-body d-flex flex-column p-3">
+              <div class="text-muted small mb-1">
+                <i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ prop.neighborhood }}
+              </div>
+              <h5 class="card-title font-heading fw-bold text-truncate mb-2">
+                <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="text-decoration-none text-dark">
+                  {{ prop.title }}
+                </a>
+              </h5>
+              
+              <div class="price-tag mb-3">{{ prop.formatted_price() }}</div>
+
+              <div class="row text-center bg-light rounded p-2 g-1 border mb-3 small mt-auto">
+                <div class="col-3">
+                  <i class="fa-solid fa-bed text-muted"></i> {{ prop.bedrooms }} Q.
+                </div>
+                <div class="col-3">
+                  <i class="fa-solid fa-bath text-muted"></i> {{ prop.bathrooms }} B.
+                </div>
+                <div class="col-3">
+                  <i class="fa-solid fa-car text-muted"></i> {{ prop.parking_spaces }} V.
+                </div>
+                <div class="col-3">
+                  <i class="fa-solid fa-ruler-combined text-muted"></i> {{ prop.area_sqm|int }}m²
+                </div>
+              </div>
+
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                <small class="text-muted text-truncate fw-semibold">
+                  <i class="fa-solid fa-building me-1"></i> {{ prop.company.name if prop.company else 'Anunciante' }}
+                </small>
+                <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="btn btn-vn-copper btn-sm">
+                  Detalhes
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="text-center py-5 w-100">
+          <p class="text-muted">Nenhum imóvel em destaque no momento.</p>
+        </div>
+      {% endfor %}
+    </div>
+
+    <a href="{{ url_for('main.properties') }}" class="btn btn-vn-outline btn-sm w-100 mt-3 d-md-none">
+      Ver Todos os Imóveis <i class="fa-solid fa-arrow-right ms-1"></i>
+    </a>
+  </div>
+</section>
+
+<!-- Commercial Registration Banner (Strict Entrepreneur Flow) -->
+<section class="py-5 bg-dark text-white border-top border-bottom border-4 border-warning">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-8">
+        <span class="badge bg-warning text-dark font-heading px-3 py-2 border border-dark mb-2">Área para Empresários</span>
+        <h2 class="font-heading text-white fw-bold display-6">
+          É Imobiliária, Hotel ou Pousada em Barcarena?
+        </h2>
+        <p class="text-white-50 mb-0">
+          Para garantir a procedência e qualidade dos anúncios em Vila dos Cabanos, os cadastros empresariais passam por análise direta da nossa administração. Envie sua solicitação e nossa equipe entrará em contato para liberar seu acesso exclusivo ao painel de publicação.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end">
+        <a href="{{ url_for('main.request_company_registration') }}" class="btn btn-vn-copper btn-lg px-4 py-3">
+          <i class="fa-solid fa-file-signature me-2"></i> Solicitar Cadastro Comercial
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

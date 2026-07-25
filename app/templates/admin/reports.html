@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Relatórios e Estatísticas - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <h1 class="font-heading fw-bold mb-1">Relatórios & Estatísticas do Portal</h1>
+  <p class="text-muted mb-4">Visão analítica de oferta de imóveis em Vila dos Cabanos e Barcarena.</p>
+
+  <div class="row g-4 mb-4">
+    <!-- Neighborhood Stats -->
+    <div class="col-md-6">
+      <div class="card card-brutalist p-4 h-100">
+        <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+          <i class="fa-solid fa-map-location-dot text-warning me-2"></i> Imóveis por Bairro
+        </h4>
+        <ul class="list-group list-group-flush">
+          {% for neighborhood, count in neighborhood_stats %}
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+              <span class="fw-semibold">{{ neighborhood }}</span>
+              <span class="badge bg-dark text-warning fs-6 border">{{ count }} imóveis</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Purpose Stats -->
+    <div class="col-md-6">
+      <div class="card card-brutalist p-4 h-100">
+        <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+          <i class="fa-solid fa-tags text-warning me-2"></i> Distribuição por Finalidade
+        </h4>
+        <ul class="list-group list-group-flush">
+          {% for purpose, count in purpose_stats %}
+            <li class="list-group-item d-flex justify-content-between align-items-center bg-transparent">
+              <span class="fw-semibold">{{ purpose }}</span>
+              <span class="badge bg-emerald text-white fs-6 border" style="background-color: var(--vn-emerald);">{{ count }} ofertas</span>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Top Viewed Properties Table -->
+  <div class="card card-brutalist p-4">
+    <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+      <i class="fa-solid fa-fire text-danger me-2"></i> Imóveis Mais Visualizados no Portal
+    </h4>
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Imóvel</th>
+            <th>Empresa</th>
+            <th>Bairro</th>
+            <th>Preço</th>
+            <th>Visualizações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prop in top_viewed %}
+            <tr>
+              <td class="fw-bold"><a href="{{ url_for('main.property_detail', id=prop.id) }}" class="text-dark" target="_blank">{{ prop.title }}</a></td>
+              <td>{{ prop.company.name if prop.company else '-' }}</td>
+              <td>{{ prop.neighborhood }}</td>
+              <td class="text-success fw-bold">{{ prop.formatted_price() }}</td>
+              <td class="fw-bold"><i class="fa-solid fa-eye text-primary me-1"></i> {{ prop.views_count }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

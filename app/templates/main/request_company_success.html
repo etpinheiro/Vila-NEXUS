@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitação Enviada - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8 text-center">
+      <div class="card card-brutalist p-5">
+        <div class="display-1 text-success mb-3">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <h1 class="font-heading fw-bold mb-3">Solicitação Recebida com Sucesso!</h1>
+        <p class="lead text-muted mb-4">
+          Agradecemos seu interesse em fazer parte do portal <strong>Vila Nexus</strong>. Os dados da sua empresa foram encaminhados para a nossa equipe de administração.
+        </p>
+
+        <div class="bg-light border border-2 border-dark rounded p-4 mb-4 text-start">
+          <h5 class="font-heading fw-bold mb-2 text-dark"><i class="fa-solid fa-clock-rotate-left text-warning me-2"></i> Próximos Passos:</h5>
+          <ul class="mb-0 text-muted">
+            <li class="mb-2">Nossa equipe entrará em contato via <strong>WhatsApp / E-mail</strong> no prazo de até 24 horas úteis.</li>
+            <li class="mb-2">Apresentaremos as opções de planos de anúncios para o mercado de Vila dos Cabanos.</li>
+            <li>Após a validação comercial, seu login e senha empresarial serão criados manualmente para você começar a cadastrar seus imóveis.</li>
+          </ul>
+        </div>
+
+        <div>
+          <a href="{{ url_for('main.index') }}" class="btn btn-vn-copper btn-lg px-4">
+            <i class="fa-solid fa-house me-2"></i> Voltar à Página Inicial
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Meu Perfil - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="row g-4">
+    <!-- Profile Form -->
+    <div class="col-lg-5">
+      <div class="card card-brutalist p-4">
+        <h3 class="font-heading fw-bold mb-3 border-bottom pb-2">
+          <i class="fa-solid fa-user-gear text-warning me-2"></i> Meus Dados
+        </h3>
+
+        <form method="POST" action="{{ url_for('auth.profile') }}">
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ form.name.label }}</label>
+            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+            {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ form.email.label }}</label>
+            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+            {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ form.phone.label }}</label>
+            {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else "")) }}
+            {% for error in form.phone.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+          </div>
+
+          <hr class="my-4">
+          <h5 class="font-heading fw-bold text-dark mb-2">Alterar Senha</h5>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">{{ form.current_password.label }}</label>
+            {{ form.current_password(class="form-control") }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold small">{{ form.new_password.label }}</label>
+            {{ form.new_password(class="form-control") }}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small">{{ form.confirm_password.label }}</label>
+            {{ form.confirm_password(class="form-control") }}
+          </div>
+
+          <button type="submit" class="btn btn-vn-copper w-100">
+            Salvar Dados
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Saved Favorites and Visit Requests -->
+    <div class="col-lg-7">
+      {% if current_user.is_client() %}
+        <div class="card card-brutalist p-4 mb-4">
+          <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+            <i class="fa-solid fa-heart text-danger me-2"></i> Meus Imóveis Favoritos ({{ favorites|length }})
+          </h4>
+
+          <div class="row g-3">
+            {% for fav in favorites %}
+              <div class="col-md-6">
+                <div class="card border border-2 border-dark h-100 p-2">
+                  <div class="d-flex gap-2">
+                    <img src="{{ fav.property.primary_image_url() }}" style="width: 70px; height: 70px; object-fit: cover;" class="rounded border">
+                    <div class="overflow-hidden">
+                      <h6 class="font-heading fw-bold mb-1 text-truncate">
+                        <a href="{{ url_for('main.property_detail', id=fav.property.id) }}" class="text-dark text-decoration-none">{{ fav.property.title }}</a>
+                      </h6>
+                      <div class="text-success fw-bold small">{{ fav.property.formatted_price() }}</div>
+                      <small class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ fav.property.neighborhood }}</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            {% else %}
+              <p class="text-muted">Você ainda não salvou nenhum imóvel nos favoritos.</p>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="card card-brutalist p-4">
+          <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+            <i class="fa-solid fa-calendar-check text-warning me-2"></i> Minhas Visitas Solicitadas
+          </h4>
+
+          <div class="table-responsive">
+            <table class="table table-brutalist small mb-0">
+              <thead>
+                <tr>
+                  <th>Imóvel</th>
+                  <th>Data Solicitada</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for v in visits %}
+                  <tr>
+                    <td><a href="{{ url_for('main.property_detail', id=v.property.id) }}" class="fw-bold text-dark">{{ v.property.title }}</a></td>
+                    <td>{{ v.preferred_date }}</td>
+                    <td><span class="badge bg-info text-dark">{{ v.status.upper() }}</span></td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <td colspan="3" class="text-center text-muted">Nenhuma solicitação de visita realizada.</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% else %}
+        <div class="card card-brutalist p-4">
+          <h4 class="font-heading fw-bold mb-2">Perfil {{ current_user.role.upper() }}</h4>
+          <p class="text-muted">Utilize a barra de navegação superior para acessar seu painel de controle de anúncios e relatórios.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

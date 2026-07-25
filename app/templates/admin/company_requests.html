@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresas Aguardando Aprovação - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="font-heading fw-bold mb-1">Solicitações Comerciais de Empresários</h1>
+      <p class="text-muted mb-0">Empresas que solicitaram cadastro. Nenhum usuário é criado automaticamente sem a aprovação comercial do administrador.</p>
+    </div>
+    <div class="btn-group">
+      <a href="{{ url_for('admin.company_requests', status='pending') }}" class="btn btn-vn-copper btn-sm {% if status_filter == 'pending' %}active{% endif %}">Pendentes ({{ pending_count }})</a>
+      <a href="{{ url_for('admin.company_requests', status='all') }}" class="btn btn-vn-outline btn-sm {% if status_filter == 'all' %}active{% endif %}">Todas</a>
+    </div>
+  </div>
+
+  <div class="card card-brutalist p-4">
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Empresa / Negócio</th>
+            <th>Responsável</th>
+            <th>CNPJ / CPF</th>
+            <th>Contatos</th>
+            <th>Status</th>
+            <th>Ações do Administrador</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for req in requests %}
+            <tr>
+              <td class="small">{{ req.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td class="fw-bold">
+                {{ req.company_name }}
+                <div class="small text-muted"><span class="badge bg-secondary">{{ req.business_type }}</span></div>
+              </td>
+              <td>{{ req.contact_person }}</td>
+              <td class="small font-monospace">{{ req.cnpj_cpf }}</td>
+              <td>
+                <div><i class="fa-solid fa-phone me-1 text-muted"></i> {{ req.phone }}</div>
+                <div class="small text-muted"><i class="fa-solid fa-envelope me-1"></i> {{ req.email }}</div>
+              </td>
+              <td>
+                <span class="badge bg-{{ 'warning' if req.status == 'pending' else ('success' if req.status == 'approved' else 'secondary') }} text-dark border">
+                  {{ req.status.upper() }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex gap-1">
+                  <!-- WhatsApp Direct Contact -->
+                  <a href="https://api.whatsapp.com/send?phone=55{{ req.whatsapp|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}&text=Ol%C3%A1%20{{ req.contact_person }},%20sou%20o%20administrador%20do%20Vila%20Nexus.%20Recebi%20sua%20solicita%C3%A7%C3%A3o%20comercial%20para%20a%20empresa%20'{{ req.company_name }}'." target="_blank" class="btn btn-sm btn-vn-emerald" title="Falar no WhatsApp">
+                    <i class="fa-brands fa-whatsapp"></i> Negociar
+                  </a>
+
+                  {% if req.status == 'pending' or req.status == 'contacted' %}
+                    <a href="{{ url_for('admin.approve_request', id=req.id) }}" class="btn btn-sm btn-vn-copper" title="Aprovar e Criar Usuário">
+                      <i class="fa-solid fa-user-plus"></i> Aprovar & Criar Usuário
+                    </a>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">Nenhuma solicitação encontrada para o filtro selecionado.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

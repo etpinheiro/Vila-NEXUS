@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel do Administrador - {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-dark text-white py-4 mb-4 border-bottom border-3 border-warning">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div>
+      <span class="badge bg-warning text-dark font-heading mb-1"><i class="fa-solid fa-user-shield me-1"></i> Controle Geral</span>
+      <h1 class="font-heading fw-bold text-white mb-0">Painel Administrativo Vila Nexus</h1>
+    </div>
+    <a href="{{ url_for('admin.company_requests') }}" class="btn btn-vn-copper position-relative">
+      <i class="fa-solid fa-envelope-open-text me-1"></i> Solicitações Pendentes
+      {% if pending_requests_count > 0 %}
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+          {{ pending_requests_count }}
+        </span>
+      {% endif %}
+    </a>
+  </div>
+</section>
+
+<div class="container mb-5">
+  <!-- Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card border-warning" style="background-color: #FFFDF0;">
+        <div class="stat-number text-warning">{{ pending_requests_count }}</div>
+        <div class="fw-bold text-dark font-heading small">Aguardando Aprovação Comercial</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">{{ total_users }}</div>
+        <div class="fw-bold text-dark font-heading small">Usuários Cadastrados</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number" style="color: var(--vn-emerald);">{{ total_companies }}</div>
+        <div class="fw-bold text-dark font-heading small">Empresas / Imobiliárias</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number" style="color: #2980B9;">{{ total_properties }}</div>
+        <div class="fw-bold text-dark font-heading small">Imóveis Ativos ({{ highlighted_count }} Destaques)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Pending Company Requests Alert Box -->
+    <div class="col-lg-6">
+      <div class="card card-brutalist p-4 h-100">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <h4 class="font-heading fw-bold mb-0">
+            <i class="fa-solid fa-user-clock text-warning me-2"></i> Leads Comerciais (Empresários)
+          </h4>
+          <a href="{{ url_for('admin.company_requests') }}" class="btn btn-vn-outline btn-sm">Ver Todas</a>
+        </div>
+
+        {% for req in recent_requests %}
+          <div class="border border-2 border-dark rounded p-3 mb-2 bg-light d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="font-heading fw-bold mb-0 text-dark">{{ req.company_name }}</h6>
+              <div class="small text-muted"><strong>Responsável:</strong> {{ req.contact_person }} ({{ req.business_type }})</div>
+              <div class="small text-muted"><i class="fa-solid fa-phone me-1"></i> {{ req.phone }}</div>
+            </div>
+            <div>
+              {% if req.status == 'pending' %}
+                <a href="{{ url_for('admin.approve_request', id=req.id) }}" class="btn btn-sm btn-vn-copper">
+                  <i class="fa-solid fa-user-plus me-1"></i> Aprovar & Criar Usuário
+                </a>
+              {% else %}
+                <span class="badge bg-secondary text-white">{{ req.status.upper() }}</span>
+              {% endif %}
+            </div>
+          </div>
+        {% else %}
+          <p class="text-muted py-3">Nenhuma solicitação pendente.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Quick Links & System Shortcuts -->
+    <div class="col-lg-6">
+      <div class="card card-brutalist p-4 h-100">
+        <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+          <i class="fa-solid fa-gears text-warning me-2"></i> Gestão do Sistema
+        </h4>
+
+        <div class="d-grid gap-2 mb-4">
+          <a href="{{ url_for('admin.users_list') }}" class="btn btn-vn-outline p-3 text-start d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-users me-2 text-warning"></i> Gerenciar Usuários (Bloquear, Editar, Redefinir Senhas)</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+          <a href="{{ url_for('admin.user_create') }}" class="btn btn-vn-outline p-3 text-start d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-user-plus me-2 text-success"></i> Criar Usuário Manualmente</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+          <a href="{{ url_for('admin.companies_list') }}" class="btn btn-vn-outline p-3 text-start d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-building me-2 text-primary"></i> Gerenciar Empresas e Imobiliárias</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+          <a href="{{ url_for('admin.properties_list') }}" class="btn btn-vn-outline p-3 text-start d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-house-circle-check me-2 text-danger"></i> Gerenciar Imóveis & Destacar Anúncios</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+          <a href="{{ url_for('admin.reports') }}" class="btn btn-vn-outline p-3 text-start d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-chart-column me-2 text-info"></i> Relatórios e Estatísticas</span>
+            <i class="fa-solid fa-chevron-right"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

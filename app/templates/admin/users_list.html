@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Usuários - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="font-heading fw-bold mb-1">Gerenciamento de Usuários</h1>
+      <p class="text-muted mb-0">Controle total de permissões, perfis (Admin, Empresário, Cliente) e bloqueios.</p>
+    </div>
+    <a href="{{ url_for('admin.user_create') }}" class="btn btn-vn-copper">
+      <i class="fa-solid fa-user-plus me-1"></i> Criar Usuário Manualmente
+    </a>
+  </div>
+
+  <div class="card card-brutalist p-4">
+    <!-- Filter bar -->
+    <form method="GET" action="{{ url_for('admin.users_list') }}" class="row g-2 mb-4">
+      <div class="col-md-4">
+        <input type="text" name="q" class="form-control" placeholder="Buscar por nome ou e-mail..." value="{{ q }}">
+      </div>
+      <div class="col-md-3">
+        <select name="role" class="form-select">
+          <option value="">Todos os perfis</option>
+          <option value="admin" {% if role_filter == 'admin' %}selected{% endif %}>Administrador</option>
+          <option value="entrepreneur" {% if role_filter == 'entrepreneur' %}selected{% endif %}>Empresário</option>
+          <option value="client" {% if role_filter == 'client' %}selected{% endif %}>Cliente</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="status" class="form-select">
+          <option value="">Todos os status</option>
+          <option value="active" {% if status_filter == 'active' %}selected{% endif %}>Ativos</option>
+          <option value="blocked" {% if status_filter == 'blocked' %}selected{% endif %}>Bloqueados</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="submit" class="btn btn-vn-outline w-100"><i class="fa-solid fa-filter me-1"></i> Filtrar</button>
+      </div>
+    </form>
+
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Usuário</th>
+            <th>E-mail</th>
+            <th>Perfil / Role</th>
+            <th>Empresa Vinculada</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+            <tr>
+              <td class="fw-bold">{{ u.name }}</td>
+              <td class="small">{{ u.email }}</td>
+              <td>
+                <span class="badge bg-{{ 'danger' if u.is_admin() else ('warning' if u.is_entrepreneur() else 'info') }} text-dark border">
+                  {{ u.role.upper() }}
+                </span>
+              </td>
+              <td class="small">{{ u.company.name if u.company else '-' }}</td>
+              <td>
+                <span class="badge bg-{{ 'success' if u.status == 'active' else 'danger' }} text-white">
+                  {{ u.status.upper() }}
+                </span>
+              </td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="{{ url_for('admin.user_edit', id=u.id) }}" class="btn btn-sm btn-outline-dark" title="Editar / Redefinir Senha">
+                    <i class="fa-solid fa-pen"></i> Editar
+                  </a>
+                  {% if u.id != current_user.id %}
+                    <form method="POST" action="{{ url_for('admin.toggle_user_status', id=u.id) }}" class="d-inline">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                      <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if u.status == 'active' else 'success' }}" title="Bloquear / Desbloquear">
+                        <i class="fa-solid fa-{{ 'ban' if u.status == 'active' else 'check' }}"></i>
+                      </button>
+                    </form>
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">Nenhum usuário encontrado.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

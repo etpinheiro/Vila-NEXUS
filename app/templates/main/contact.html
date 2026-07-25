@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Contato - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8 text-center">
+      <div class="card card-brutalist p-5">
+        <h1 class="font-heading fw-bold mb-3">Entre em Contato Conosco</h1>
+        <p class="lead text-muted mb-4">Tem dúvidas, sugestões ou interesse em anunciar sua imobiliária/pousada em Vila dos Cabanos?</p>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border border-2 border-dark text-start">
+              <h5 class="font-heading fw-bold mb-1"><i class="fa-brands fa-whatsapp text-success me-2"></i> WhatsApp Atendimento</h5>
+              <p class="mb-0 text-muted">(91) 99999-8888</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded border border-2 border-dark text-start">
+              <h5 class="font-heading fw-bold mb-1"><i class="fa-solid fa-envelope text-warning me-2"></i> E-mail Suporte</h5>
+              <p class="mb-0 text-muted">contato@vilanexus.com.br</p>
+            </div>
+          </div>
+        </div>
+
+        <a href="{{ url_for('main.request_company_registration') }}" class="btn btn-vn-copper btn-lg">
+          Solicitar Cadastro Comercial
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

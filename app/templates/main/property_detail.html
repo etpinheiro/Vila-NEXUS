@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ property.title }} - Vila dos Cabanos - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-dark">Início</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('main.properties') }}" class="text-dark">Imóveis</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ property.title }}</li>
+    </ol>
+  </nav>
+
+  <div class="row g-4">
+    <!-- Left Column: Gallery & Details -->
+    <div class="col-lg-8">
+      <!-- Image Gallery Brutalist -->
+      <div class="card card-brutalist mb-4">
+        <div class="position-relative bg-dark text-center property-gallery-main">
+          <img id="mainPropertyImg" src="{{ property.primary_image_url() }}" alt="{{ property.title }}" class="img-fluid w-100 h-100" style="object-fit: cover;">
+          <div class="position-absolute top-0 start-0 m-3">
+            <span class="badge badge-vn badge-vn-{{ property.purpose.lower() }} fs-6">{{ property.purpose }}</span>
+            <span class="badge bg-dark text-white border border-light ms-1 fs-6">{{ property.property_type }}</span>
+          </div>
+        </div>
+
+        {% if property.images|length > 1 %}
+          <div class="card-footer bg-light p-2 border-top border-3 border-dark">
+            <div class="d-flex gap-2 overflow-auto py-1">
+              {% for img in property.images %}
+                <img src="{{ img.get_url() }}" class="img-thumbnail cursor-pointer" style="width: 80px; height: 60px; object-fit: cover; border: 2px solid #1A1A1A;" onclick="document.getElementById('mainPropertyImg').src = this.src;">
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- Specs & Details -->
+      <div class="card card-brutalist p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <h2 class="font-heading fw-bold mb-1">{{ property.title }}</h2>
+            <p class="text-muted mb-0"><i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ property.address }}, Bairro {{ property.neighborhood }} - Barcarena/PA</p>
+          </div>
+          <button class="favorite-btn {% if is_favorite %}active{% endif %}" data-property-id="{{ property.id }}" title="Favoritar">
+            <i class="{% if is_favorite %}fas fa-heart text-danger{% else %}far fa-heart{% endif %}"></i>
+          </button>
+        </div>
+
+        <hr class="my-3">
+
+        <!-- Specs Grid -->
+        <div class="row text-center g-2 g-md-3 mb-4 property-specs-grid">
+          <div class="col-6 col-md-3">
+            <div class="p-2 p-md-3 bg-light rounded border border-2 border-dark">
+              <i class="fa-solid fa-bed fa-2x text-warning mb-1"></i>
+              <div class="fw-bold font-heading fs-5">{{ property.bedrooms }}</div>
+              <div class="small text-muted">Quartos</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="p-2 p-md-3 bg-light rounded border border-2 border-dark">
+              <i class="fa-solid fa-bath fa-2x text-warning mb-1"></i>
+              <div class="fw-bold font-heading fs-5">{{ property.bathrooms }}</div>
+              <div class="small text-muted">Banheiros</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="p-2 p-md-3 bg-light rounded border border-2 border-dark">
+              <i class="fa-solid fa-car fa-2x text-warning mb-1"></i>
+              <div class="fw-bold font-heading fs-5">{{ property.parking_spaces }}</div>
+              <div class="small text-muted">Vagas</div>
+            </div>
+          </div>
+          <div class="col-6 col-md-3">
+            <div class="p-2 p-md-3 bg-light rounded border border-2 border-dark">
+              <i class="fa-solid fa-ruler-combined fa-2x text-warning mb-1"></i>
+              <div class="fw-bold font-heading fs-5">{{ property.area_sqm|int }}m²</div>
+              <div class="small text-muted">Área Útil</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <h4 class="font-heading fw-bold mb-3">Descrição do Imóvel</h4>
+        <p class="text-dark leading-relaxed mb-4" style="white-space: pre-line;">{{ property.description }}</p>
+
+        <!-- Features / Amenities -->
+        {% if property.get_features_list() %}
+          <h4 class="font-heading fw-bold mb-3">Características & Comodidades</h4>
+          <div class="d-flex flex-wrap gap-2 mb-3">
+            {% for ft in property.get_features_list() %}
+              <span class="badge bg-white text-dark border border-2 border-dark px-3 py-2 fs-6">
+                <i class="fa-solid fa-check text-success me-1"></i> {{ ft }}
+              </span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Right Column: Price & Company Contact Box -->
+    <div class="col-lg-4">
+      <div class="card card-brutalist p-4 sticky-top property-price-box" style="top: 90px;">
+        <div class="text-muted small font-heading uppercase mb-1">Valor do Anúncio</div>
+        <div class="display-6 font-heading fw-extrabold text-success mb-3">{{ property.formatted_price() }}</div>
+
+        {% if property.status != 'disponivel' %}
+          <div class="alert alert-warning text-center fw-bold border-dark mb-3">
+            STATUS: {{ property.status.upper() }}
+          </div>
+        {% endif %}
+
+        <div class="d-grid gap-2 mb-4">
+          <!-- WhatsApp Contact Button -->
+          <a href="https://api.whatsapp.com/send?phone=55{{ property.phone|replace(' ', '')|replace('-', '')|replace('(', '')|replace(')', '') }}&text=Ol%C3%A1!%20Vi%20o%20an%C3%BAncio%20'{{ property.title }}'%20no%20Vila%20Nexus%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es." target="_blank" class="btn btn-vn-emerald btn-lg">
+            <i class="fa-brands fa-whatsapp fa-lg me-2"></i> Falar pelo WhatsApp
+          </a>
+          
+          <button class="btn btn-vn-copper btn-lg" data-bs-toggle="modal" data-bs-target="#visitModal">
+            <i class="fa-solid fa-calendar-check me-2"></i> Agendar Visita
+          </button>
+        </div>
+
+        <hr>
+
+        <!-- Company Card Info -->
+        <h5 class="font-heading fw-bold mb-3">Anunciante Responsável</h5>
+        <div class="d-flex align-items-center mb-3">
+          <div class="bg-dark text-white rounded p-2 text-center me-3 border border-2 border-warning" style="width: 55px; height: 55px;">
+            <i class="fa-solid fa-building fa-2x"></i>
+          </div>
+          <div>
+            <h6 class="font-heading fw-bold mb-0">{{ property.company.name if property.company else 'Anunciante Direct' }}</h6>
+            <span class="badge bg-light text-dark border border-secondary">{{ property.company.business_type if property.company else 'Empresa' }}</span>
+          </div>
+        </div>
+
+        <ul class="list-unstyled small mb-0">
+          <li class="mb-2"><i class="fa-solid fa-phone me-2 text-muted"></i> {{ property.phone }}</li>
+          <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-muted"></i> {{ property.email }}</li>
+          <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-muted"></i> Bairro {{ property.company.neighborhood if property.company else 'Vila dos Cabanos' }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Agendar Visita -->
+<div class="modal fade" id="visitModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content card-brutalist">
+      <div class="modal-header bg-dark text-white border-bottom border-3 border-warning">
+        <h5 class="modal-header-title font-heading fw-bold text-white mb-0">
+          <i class="fa-solid fa-calendar-days text-warning me-2"></i> Solicitar Visita / Contato
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-4">
+        <form id="visitForm">
+          <input type="hidden" name="property_id" value="{{ property.id }}">
+          
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Seu Nome Completo *</label>
+            <input type="text" name="client_name" class="form-control" value="{{ current_user.name if current_user.is_authenticated else '' }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Seu E-mail *</label>
+            <input type="email" name="client_email" class="form-control" value="{{ current_user.email if current_user.is_authenticated else '' }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Seu Telefone / WhatsApp *</label>
+            <input type="text" name="client_phone" class="form-control" value="{{ current_user.phone if current_user.is_authenticated else '' }}" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Data e Turno Preferidos *</label>
+            <input type="text" name="preferred_date" class="form-control" placeholder="Ex: Próxima terça-feira pela manhã (10h)" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Mensagem / Dúvidas</label>
+            <textarea name="notes" class="form-control" rows="3" placeholder="Tenho interesse em conhecer o imóvel..."></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-vn-emerald w-100 py-2">
+            <i class="fa-solid fa-paper-plane me-1"></i> Enviar Solicitação de Visita
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

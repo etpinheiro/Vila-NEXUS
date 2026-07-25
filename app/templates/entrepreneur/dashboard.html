@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Painel do Empresário - {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-dark text-white py-4 mb-4 border-bottom border-3 border-warning">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div>
+      <span class="badge bg-warning text-dark font-heading mb-1">{{ company.business_type if company else 'Empresário' }}</span>
+      <h1 class="font-heading fw-bold text-white mb-0">{{ company.name if company else 'Painel do Empresário' }}</h1>
+    </div>
+    <a href="{{ url_for('entrepreneur.property_create') }}" class="btn btn-vn-copper">
+      <i class="fa-solid fa-plus me-1"></i> Publicar Novo Imóvel
+    </a>
+  </div>
+</section>
+
+<div class="container mb-5">
+  <!-- Stats Row -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number">{{ total_properties }}</div>
+        <div class="fw-bold text-dark font-heading small">Total de Imóveis Anunciados</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number" style="color: var(--vn-emerald);">{{ available_count }}</div>
+        <div class="fw-bold text-dark font-heading small">Imóveis Disponíveis</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number" style="color: #E67E22;">{{ total_views }}</div>
+        <div class="fw-bold text-dark font-heading small">Visualizações de Anúncios</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="stat-card">
+        <div class="stat-number" style="color: #2980B9;">{{ recent_visits|length }}</div>
+        <div class="fw-bold text-dark font-heading small">Leads / Visitas Recebidas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Recent Properties Table -->
+    <div class="col-lg-8">
+      <div class="card card-brutalist p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <h4 class="font-heading fw-bold mb-0">Seus Imóveis Recentes</h4>
+          <a href="{{ url_for('entrepreneur.properties_list') }}" class="btn btn-vn-outline btn-sm">Ver Todos</a>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-brutalist align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Imóvel</th>
+                <th>Preço</th>
+                <th>Bairro</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prop in recent_properties %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{{ prop.primary_image_url() }}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded border me-2">
+                      <div>
+                        <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="fw-bold text-dark text-decoration-none" target="_blank">
+                          {{ prop.title }}
+                        </a>
+                        <div class="small text-muted">{{ prop.purpose }} • {{ prop.property_type }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="fw-bold text-success">{{ prop.formatted_price() }}</td>
+                  <td>{{ prop.neighborhood }}</td>
+                  <td>
+                    <span class="badge bg-{{ 'success' if prop.status == 'disponivel' else 'warning' }} text-dark border">
+                      {{ prop.status.upper() }}
+                    </span>
+                  </td>
+                  <td>
+                    <a href="{{ url_for('entrepreneur.property_edit', id=prop.id) }}" class="btn btn-sm btn-outline-dark me-1" title="Editar">
+                      <i class="fa-solid fa-pen"></i>
+                    </a>
+                  </td>
+                </tr>
+              {% else %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-4">Nenhum imóvel cadastrado. Clique no botão acima para publicar seu primeiro imóvel!</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action / Visit Leads Sidebar -->
+    <div class="col-lg-4">
+      <div class="card card-brutalist p-4 mb-4">
+        <h4 class="font-heading fw-bold mb-3 border-bottom pb-2">
+          <i class="fa-solid fa-bell text-warning me-2"></i> Solicitações de Visitas
+        </h4>
+
+        {% for visit in recent_visits %}
+          <div class="border border-2 border-dark rounded p-2 mb-2 bg-light">
+            <div class="fw-bold text-dark">{{ visit.client_name }}</div>
+            <div class="small text-muted"><i class="fa-solid fa-phone me-1"></i> {{ visit.client_phone }}</div>
+            <div class="small text-truncate"><strong>Imóvel:</strong> {{ visit.property.title }}</div>
+            <div class="small text-primary"><i class="fa-solid fa-calendar me-1"></i> {{ visit.preferred_date }}</div>
+          </div>
+        {% else %}
+          <p class="text-muted small">Nenhuma solicitação de visita pendente no momento.</p>
+        {% endfor %}
+
+        <a href="{{ url_for('entrepreneur.visit_requests') }}" class="btn btn-vn-copper btn-sm w-100 mt-2">
+          Gerenciar Todas as Visitas
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Gerenciar Todos os Imóveis - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="font-heading fw-bold mb-1">Gerenciamento Geral de Imóveis</h1>
+      <p class="text-muted mb-0">Controle destaques da página inicial, verifique status de disponibilidades e moderar anúncios.</p>
+    </div>
+    <div class="btn-group">
+      <a href="{{ url_for('admin.properties_list') }}" class="btn btn-vn-outline btn-sm {% if not highlight_filter %}active{% endif %}">Todos os Imóveis</a>
+      <a href="{{ url_for('admin.properties_list', highlight='true') }}" class="btn btn-vn-copper btn-sm {% if highlight_filter == 'true' %}active{% endif %}">Destaques da Home</a>
+    </div>
+  </div>
+
+  <div class="card card-brutalist p-4">
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Imóvel</th>
+            <th>Empresa / Anunciante</th>
+            <th>Preço</th>
+            <th>Bairro</th>
+            <th>Destaque Home</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prop in properties %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img src="{{ prop.primary_image_url() }}" style="width: 50px; height: 50px; object-fit: cover;" class="rounded border me-2">
+                  <div>
+                    <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="fw-bold text-dark text-decoration-none" target="_blank">
+                      {{ prop.title }}
+                    </a>
+                    <div class="small text-muted">{{ prop.purpose }} • {{ prop.property_type }}</div>
+                  </div>
+                </div>
+              </td>
+              <td class="small fw-bold">{{ prop.company.name if prop.company else 'Anunciante' }}</td>
+              <td class="fw-bold text-success">{{ prop.formatted_price() }}</td>
+              <td>{{ prop.neighborhood }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('admin.toggle_property_highlight', id=prop.id) }}" class="d-inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <button type="submit" class="btn btn-sm btn-{{ 'warning text-dark' if prop.is_highlighted else 'outline-secondary' }} border-dark">
+                    <i class="fa-solid fa-bolt me-1"></i> {{ 'SIM (Destacado)' if prop.is_highlighted else 'Não' }}
+                  </button>
+                </form>
+              </td>
+              <td>
+                <span class="badge bg-{{ 'success' if prop.status == 'disponivel' else 'warning' }} text-dark border">
+                  {{ prop.status.upper() }}
+                </span>
+              </td>
+              <td>
+                <a href="{{ url_for('entrepreneur.property_edit', id=prop.id) }}" class="btn btn-sm btn-outline-dark">
+                  <i class="fa-solid fa-pen"></i> Editar
+                </a>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="7" class="text-center text-muted py-4">Nenhum imóvel encontrado.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

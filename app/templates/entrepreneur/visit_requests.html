@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitações de Visita - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <h1 class="font-heading fw-bold mb-1">Solicitações de Visita e Contatos</h1>
+  <p class="text-muted mb-4">Gerencie as mensagens e propostas de agendamento recebidas de clientes.</p>
+
+  <div class="card card-brutalist p-4">
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Contatos</th>
+            <th>Imóvel Solicitado</th>
+            <th>Data Preferida</th>
+            <th>Mensagem</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for visit in visits %}
+            <tr>
+              <td class="fw-bold">{{ visit.client_name }}</td>
+              <td>
+                <div><i class="fa-solid fa-phone me-1 text-muted"></i> {{ visit.client_phone }}</div>
+                <div class="small text-muted"><i class="fa-solid fa-envelope me-1"></i> {{ visit.client_email }}</div>
+              </td>
+              <td>
+                <a href="{{ url_for('main.property_detail', id=visit.property.id) }}" class="fw-bold text-dark text-decoration-none" target="_blank">
+                  {{ visit.property.title }}
+                </a>
+              </td>
+              <td class="fw-bold text-primary">{{ visit.preferred_date }}</td>
+              <td class="small">{{ visit.notes or 'Sem observações' }}</td>
+              <td>
+                <form method="POST" action="{{ url_for('entrepreneur.update_visit_status', id=visit.id) }}" class="d-inline">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="pending" {% if visit.status == 'pending' %}selected{% endif %}>Pendente</option>
+                    <option value="scheduled" {% if visit.status == 'scheduled' %}selected{% endif %}>Agendado</option>
+                    <option value="completed" {% if visit.status == 'completed' %}selected{% endif %}>Concluído</option>
+                    <option value="cancelled" {% if visit.status == 'cancelled' %}selected{% endif %}>Cancelado</option>
+                  </select>
+                </form>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="6" class="text-center text-muted py-4">Nenhuma solicitação de visita registrada.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

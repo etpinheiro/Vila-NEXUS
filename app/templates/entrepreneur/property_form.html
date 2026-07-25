@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card card-brutalist p-4 p-md-5">
+        <h2 class="font-heading fw-bold mb-4 border-bottom pb-2">{{ title }}</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+          {{ form.hidden_tag() }}
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label fw-bold">{{ form.title.label }} *</label>
+              {{ form.title(class="form-control" + (" is-invalid" if form.title.errors else ""), placeholder="Ex: Casa Residencial com 3 Quartos e Piscina no Bairro Novo Paraíso") }}
+              {% for error in form.title.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.purpose.label }} *</label>
+              {{ form.purpose(class="form-select" + (" is-invalid" if form.purpose.errors else "")) }}
+              {% for error in form.purpose.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.property_type.label }} *</label>
+              {{ form.property_type(class="form-select" + (" is-invalid" if form.property_type.errors else "")) }}
+              {% for error in form.property_type.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.price.label }} *</label>
+              {{ form.price(class="form-control" + (" is-invalid" if form.price.errors else ""), placeholder="0.00") }}
+              {% for error in form.price.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.neighborhood.label }} *</label>
+              {{ form.neighborhood(class="form-select" + (" is-invalid" if form.neighborhood.errors else "")) }}
+              {% for error in form.neighborhood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.address.label }} *</label>
+              {{ form.address(class="form-control" + (" is-invalid" if form.address.errors else ""), placeholder="Av. Cônego Batista Campos, nº 100") }}
+              {% for error in form.address.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold">{{ form.bedrooms.label }}</label>
+              {{ form.bedrooms(class="form-control") }}
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold">{{ form.bathrooms.label }}</label>
+              {{ form.bathrooms(class="form-control") }}
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold">{{ form.suites.label }}</label>
+              {{ form.suites(class="form-control") }}
+            </div>
+
+            <div class="col-md-3">
+              <label class="form-label fw-bold">{{ form.parking_spaces.label }}</label>
+              {{ form.parking_spaces(class="form-control") }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.area_sqm.label }}</label>
+              {{ form.area_sqm(class="form-control", placeholder="Ex: 120.5") }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.status.label }} *</label>
+              {{ form.status(class="form-select") }}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold">{{ form.features.label }}</label>
+              {{ form.features(class="form-control") }}
+              <div class="form-text">Separe as características por vírgula. Ex: Piscina, Churrasqueira, Garagem Coberta, Ar Condicionado</div>
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold">{{ form.description.label }} *</label>
+              {{ form.description(class="form-control" + (" is-invalid" if form.description.errors else ""), rows=5) }}
+              {% for error in form.description.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.phone.label }} *</label>
+              {{ form.phone(class="form-control") }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.email.label }} *</label>
+              {{ form.email(class="form-control") }}
+            </div>
+
+            <!-- Upload Multiple Images -->
+            <div class="col-12">
+              <div class="p-3 bg-light border border-2 border-dark rounded">
+                <label class="form-label fw-bold"><i class="fa-solid fa-images text-warning me-1"></i> {{ form.images.label }}</label>
+                {{ form.images(class="form-control", id="images", multiple=True) }}
+                <div class="form-text">Você pode selecionar múltiplos arquivos simultaneamente. As imagens serão carregadas com visualização em tempo real.</div>
+
+                <div id="image-preview-container" class="row mt-3"></div>
+
+                <!-- Existing Images Grid if Editing -->
+                {% if property and property.images %}
+                  <hr>
+                  <label class="form-label fw-bold">Imagens Cadastradas:</label>
+                  <div class="row g-2">
+                    {% for img in property.images %}
+                      <div class="col-4 col-md-3 text-center" id="img-card-{{ img.id }}">
+                        <div class="card border border-2 border-dark p-1">
+                          <img src="/static/uploads/{{ img.filename }}" style="height: 100px; object-fit: cover;" class="rounded">
+                          {% if img.is_primary %}
+                            <span class="badge bg-warning text-dark mt-1">Capa Principal</span>
+                          {% else %}
+                            <button type="button" class="btn btn-sm btn-outline-dark mt-1" onclick="setPrimaryCover({{ img.id }})">Definir Capa</button>
+                          {% endif %}
+                          <button type="button" class="btn btn-sm btn-danger mt-1" onclick="deletePropImage({{ img.id }})">Excluir</button>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            {% if current_user.is_admin() %}
+              <div class="col-12">
+                <div class="form-check form-switch mt-2">
+                  {{ form.is_highlighted(class="form-check-input") }}
+                  {{ form.is_highlighted.label(class="form-check-label fw-bold") }}
+                </div>
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-vn-copper btn-lg px-5">
+              <i class="fa-solid fa-floppy-disk me-1"></i> {{ title }}
+            </button>
+            <a href="{{ url_for('entrepreneur.properties_list') }}" class="btn btn-outline-secondary btn-lg">
+              Cancelar
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function deletePropImage(imgId) {
+  if (!confirm('Deseja excluir esta imagem do anúncio?')) return;
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+  fetch(`/api/imagem/${imgId}/excluir`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      document.getElementById(`img-card-${imgId}`)?.remove();
+      showToast(data.message, 'success');
+    } else {
+      alert(data.message);
+    }
+  });
+}
+
+function setPrimaryCover(imgId) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  fetch(`/api/imagem/${imgId}/definir-capa`, {
+    method: 'POST',
+    headers: { 'X-CSRFToken': csrfToken }
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      location.reload();
+    }
+  });
+}
+</script>
+{% endblock %}

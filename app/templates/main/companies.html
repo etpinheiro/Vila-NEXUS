@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Empresas, Imobiliárias e Hotéis em Vila dos Cabanos - {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-dark text-white py-4 mb-4 border-bottom border-3 border-warning">
+  <div class="container">
+    <h1 class="font-heading fw-bold text-white mb-1">Guia de Imobiliárias & Hospedagem</h1>
+    <p class="text-white-50 mb-0">Empresas e anunciantes verificados em Vila dos Cabanos (Barcarena - PA).</p>
+  </div>
+</section>
+
+<div class="container mb-5">
+  <div class="row g-4">
+    {% for company in companies %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-brutalist h-100 p-3">
+          <div class="d-flex align-items-center mb-3">
+            <div class="bg-dark text-warning rounded p-2 text-center me-3 border border-2 border-warning" style="width: 60px; height: 60px;">
+              <i class="fa-solid fa-building fa-2x"></i>
+            </div>
+            <div>
+              <h5 class="font-heading fw-bold mb-0 text-dark">{{ company.name }}</h5>
+              <span class="badge bg-warning text-dark font-heading">{{ company.business_type }}</span>
+            </div>
+          </div>
+
+          <p class="text-muted small mb-3 flex-grow-1">
+            {{ company.description or 'Empresa parceira atuante no mercado imobiliário e de hospedagem em Barcarena - PA.' }}
+          </p>
+
+          <div class="bg-light p-2 rounded border border-dark mb-3 small">
+            <div><i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ company.neighborhood }}</div>
+            <div><i class="fa-solid fa-phone me-1 text-muted"></i> {{ company.phone }}</div>
+          </div>
+
+          <a href="{{ url_for('main.company_detail', id=company.id) }}" class="btn btn-vn-copper w-100">
+            Ver Portfólio de Imóveis ({{ company.properties.count() }})
+          </a>
+        </div>
+      </div>
+    {% else %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted">Nenhuma empresa parceira cadastrada até o momento.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

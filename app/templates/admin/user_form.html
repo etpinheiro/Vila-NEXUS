@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-brutalist p-4 p-md-5">
+        <h2 class="font-heading fw-bold mb-4 border-bottom pb-2">{{ title }}</h2>
+
+        <form method="POST">
+          {{ form.hidden_tag() }}
+
+          <div class="row g-3">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.name.label }} *</label>
+              {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else "")) }}
+              {% for error in form.name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.email.label }} *</label>
+              {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+              {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.phone.label }}</label>
+              {{ form.phone(class="form-control") }}
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label fw-bold">{{ form.role.label }} *</label>
+              {{ form.role(class="form-select") }}
+            </div>
+
+            <div class="col-md-3 mb-3">
+              <label class="form-label fw-bold">{{ form.status.label }} *</label>
+              {{ form.status(class="form-select") }}
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label fw-bold">{{ form.company_id.label }}</label>
+              {{ form.company_id(class="form-select") }}
+              <div class="form-text">Necessário para perfis de Empresário.</div>
+            </div>
+
+            <div class="col-12 mb-4">
+              <label class="form-label fw-bold">{{ form.new_password.label }}</label>
+              {{ form.new_password(class="form-control", placeholder="Deixe em branco para manter a mesma senha") }}
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-vn-copper btn-lg px-5">Salvar Usuário</button>
+            <a href="{{ url_for('admin.users_list') }}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}Solicitar Cadastro Comercial - {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-dark text-white py-5 border-bottom border-4 border-warning mb-5">
+  <div class="container text-center max-w-700">
+    <span class="badge bg-warning text-dark font-heading px-3 py-2 border border-dark mb-3">
+      <i class="fa-solid fa-handshake me-1"></i> Parceria Comercial Vila Nexus
+    </span>
+    <h1 class="hero-title">
+      Anuncie Seus Imóveis ou Hospedagens em <span>Vila dos Cabanos</span>
+    </h1>
+    <p class="lead text-white-50">
+      Para manter o padrão de segurança e excelência do portal, cadastros de empresários passam por homologação prévia da nossa administração.
+    </p>
+  </div>
+</section>
+
+<div class="container mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card card-brutalist p-4 p-md-5">
+        
+        <!-- Workflow explanation alert -->
+        <div class="alert alert-warning border-2 border-dark mb-4">
+          <h5 class="font-heading fw-bold text-dark mb-2">
+            <i class="fa-solid fa-circle-exclamation text-warning me-2"></i> Como Funciona o Fluxo de Acesso:
+          </h5>
+          <ol class="mb-0 small text-dark ps-3">
+            <li>Você preenche este formulário com os dados da sua imobiliária, hotel, pousada ou portfólio.</li>
+            <li>Sua solicitação é enviada exclusivamente para o painel de análise da nossa diretoria.</li>
+            <li>Entraremos em contato via WhatsApp ou telefone para apresentar os planos comerciais e alinhar o contrato.</li>
+            <li>Após a confirmação, nossa equipe criará manualmente seu usuário e senha empresarial para acesso imediato.</li>
+          </ol>
+        </div>
+
+        <h3 class="font-heading fw-bold mb-4 border-bottom pb-2">Formulário de Solicitação</h3>
+
+        <form method="POST" action="{{ url_for('main.request_company_registration') }}">
+          {{ form.hidden_tag() }}
+
+          <div class="row g-3">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.company_name.label }} *</label>
+              {{ form.company_name(class="form-control" + (" is-invalid" if form.company_name.errors else ""), placeholder="Ex: Imobiliária Cabanos Prime") }}
+              {% for error in form.company_name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.contact_person.label }} *</label>
+              {{ form.contact_person(class="form-control" + (" is-invalid" if form.contact_person.errors else ""), placeholder="Seu nome completo") }}
+              {% for error in form.contact_person.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.cnpj_cpf.label }} *</label>
+              {{ form.cnpj_cpf(class="form-control" + (" is-invalid" if form.cnpj_cpf.errors else ""), placeholder="CNPJ ou CPF") }}
+              {% for error in form.cnpj_cpf.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.business_type.label }} *</label>
+              {{ form.business_type(class="form-select" + (" is-invalid" if form.business_type.errors else "")) }}
+              {% for error in form.business_type.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.phone.label }} *</label>
+              {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else ""), placeholder="(91) 98888-8888") }}
+              {% for error in form.phone.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ form.whatsapp.label }} *</label>
+              {{ form.whatsapp(class="form-control" + (" is-invalid" if form.whatsapp.errors else ""), placeholder="Número com WhatsApp para contato rápido") }}
+              {% for error in form.whatsapp.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-12 mb-3">
+              <label class="form-label fw-bold">{{ form.email.label }} *</label>
+              {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="contato@suaempresa.com.br") }}
+              {% for error in form.email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-12 mb-4">
+              <label class="form-label fw-bold">{{ form.notes.label }}</label>
+              {{ form.notes(class="form-control", rows=4, placeholder="Descreva brevemente a quantidade aproximada de imóveis que deseja anunciar, localização das propriedades, etc.") }}
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-vn-copper btn-lg w-100 py-3 font-heading fw-bold fs-5">
+            <i class="fa-solid fa-paper-plane me-2"></i> Enviar Solicitação Comercial
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

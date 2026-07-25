@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.name }} - Vila Nexus{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <!-- Company Banner Card -->
+  <div class="card card-brutalist p-4 mb-4 bg-dark text-white border-bottom border-4 border-warning">
+    <div class="row align-items-center g-3">
+      <div class="col-auto">
+        <div class="bg-warning text-dark rounded p-3 text-center border border-2 border-white" style="width: 80px; height: 80px;">
+          <i class="fa-solid fa-building fa-3x"></i>
+        </div>
+      </div>
+      <div class="col">
+        <span class="badge bg-warning text-dark font-heading mb-1">{{ company.business_type }}</span>
+        <h1 class="font-heading fw-bold text-white mb-1">{{ company.name }}</h1>
+        <p class="text-white-50 mb-0"><i class="fa-solid fa-location-dot me-1 text-danger"></i> {{ company.address or company.neighborhood }}, Barcarena - PA</p>
+      </div>
+      <div class="col-md-auto">
+        <a href="https://api.whatsapp.com/send?phone=55{{ company.whatsapp or company.phone }}" target="_blank" class="btn btn-vn-emerald btn-lg">
+          <i class="fa-brands fa-whatsapp fa-lg me-2"></i> WhatsApp Comercial
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="font-heading fw-bold mb-3">Imóveis e Acomodações de {{ company.name }}</h3>
+
+  <div class="row g-4">
+    {% for prop in properties %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card card-brutalist h-100">
+          <div class="property-img-container">
+            <img src="{{ prop.primary_image_url() }}" alt="{{ prop.title }}">
+            <span class="badge badge-vn badge-vn-{{ prop.purpose.lower() }} position-absolute top-0 start-0 m-2">{{ prop.purpose }}</span>
+          </div>
+          <div class="card-body p-3 d-flex flex-column">
+            <h5 class="card-title font-heading fw-bold text-truncate mb-2">
+              <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="text-dark text-decoration-none">{{ prop.title }}</a>
+            </h5>
+            <div class="price-tag mb-3">{{ prop.formatted_price() }}</div>
+            <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="btn btn-vn-copper btn-sm mt-auto">Ver Imóvel</a>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="col-12 text-center py-5">
+        <p class="text-muted">Esta empresa ainda não possui imóveis ativos cadastrados no portal.</p>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Sobre Vila dos Cabanos - {{ app_name }}{% endblock %}
+
+{% block content %}
+<section class="bg-dark text-white py-5 border-bottom border-4 border-warning mb-5">
+  <div class="container text-center">
+    <h1 class="hero-title">Sobre <span>Vila dos Cabanos</span> & Barcarena</h1>
+    <p class="lead text-white-50 max-w-700 mx-auto">
+      Um dos maiores polos industriais e de investimentos imobiliários do Pará, combinando praias tropicais como Caripi e grande dinamismo econômico.
+    </p>
+  </div>
+</section>
+
+<div class="container mb-5">
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card card-brutalist p-4 h-100">
+        <h3 class="font-heading fw-bold text-dark mb-3">
+          <i class="fa-solid fa-city text-warning me-2"></i> O Mercado Imobiliário em Expansão
+        </h3>
+        <p class="text-dark">
+          Vila dos Cabanos é o principal núcleo urbano do município de Barcarena (PA). Conhecida por abrigar complexos industriais de renome global e belas praias de água doce como a **Praia do Caripi**, a região apresenta uma demanda constante e altamente qualificada por imóveis de venda, aluguel mensal residencial e executivo, hospedagens e temporada.
+        </p>
+        <p class="text-dark">
+          O **Vila Nexus** nasce para centralizar essa oferta, conectando imobiliárias tradicionais, proprietários, pousadas e hotéis a profissionais, famílias e investidores que chegam à região.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-lg-6">
+      <div class="card card-brutalist p-4 h-100 bg-dark text-white border-warning">
+        <h3 class="font-heading fw-bold text-white mb-3">
+          <i class="fa-solid fa-bullseye text-warning me-2"></i> Nossa Missão
+        </h3>
+        <ul class="list-unstyled leading-relaxed text-white-50">
+          <li class="mb-3"><i class="fa-solid fa-circle-check text-warning me-2"></i> <strong>Segurança e Verificação:</strong> Todos os empresários cadastrados passam por aprovação prévia manual.</li>
+          <li class="mb-3"><i class="fa-solid fa-circle-check text-warning me-2"></i> <strong>Tecnologia de Ponta:</strong> Plataforma intuitiva com busca inteligente por bairro e finalidade.</li>
+          <li class="mb-3"><i class="fa-solid fa-circle-check text-warning me-2"></i> <strong>Contato Direto:</strong> Sem intermediários na negociação — você conversa direto com quem anuncia.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

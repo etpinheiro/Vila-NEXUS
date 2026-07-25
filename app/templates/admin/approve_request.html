@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block title %}Aprovar Cadastro Commercial & Criar Usuário - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-10">
+      <div class="card card-brutalist p-4 p-md-5">
+        <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+          <div>
+            <span class="badge bg-warning text-dark font-heading mb-1">Aprovação de Parceria Comercial</span>
+            <h2 class="font-heading fw-bold mb-0">Criar Usuário Empresário Manualmente</h2>
+          </div>
+          <a href="{{ url_for('admin.company_requests') }}" class="btn btn-outline-secondary btn-sm">Voltar às Solicitações</a>
+        </div>
+
+        <!-- Request summary -->
+        <div class="alert alert-info border-2 border-dark mb-4">
+          <h5 class="font-heading fw-bold mb-1"><i class="fa-solid fa-file-invoice text-primary me-2"></i> Solicitação Recebida:</h5>
+          <p class="mb-0 small">
+            <strong>Empresa:</strong> {{ req.company_name }} | <strong>Contato:</strong> {{ req.contact_person }} | <strong>Telefone:</strong> {{ req.phone }} | <strong>E-mail:</strong> {{ req.email }}
+          </p>
+          {% if req.notes %}
+            <p class="mb-0 small text-muted mt-1"><strong>Observações do Lead:</strong> "{{ req.notes }}"</p>
+          {% endif %}
+        </div>
+
+        <form method="POST" action="{{ url_for('admin.approve_request', id=req.id) }}">
+          {{ form.hidden_tag() }}
+
+          <h4 class="font-heading fw-bold mb-3 text-dark"><i class="fa-solid fa-building me-2 text-warning"></i> 1. Dados da Empresa</h4>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.company_name.label }} *</label>
+              {{ form.company_name(class="form-control" + (" is-invalid" if form.company_name.errors else "")) }}
+              {% for error in form.company_name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.cnpj_cpf.label }} *</label>
+              {{ form.cnpj_cpf(class="form-control" + (" is-invalid" if form.cnpj_cpf.errors else "")) }}
+              {% for error in form.cnpj_cpf.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.business_type.label }} *</label>
+              {{ form.business_type(class="form-select" + (" is-invalid" if form.business_type.errors else "")) }}
+              {% for error in form.business_type.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.company_phone.label }} *</label>
+              {{ form.company_phone(class="form-control" + (" is-invalid" if form.company_phone.errors else "")) }}
+              {% for error in form.company_phone.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label fw-bold">{{ form.company_whatsapp.label }} *</label>
+              {{ form.company_whatsapp(class="form-control" + (" is-invalid" if form.company_whatsapp.errors else "")) }}
+              {% for error in form.company_whatsapp.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.company_email.label }} *</label>
+              {{ form.company_email(class="form-control" + (" is-invalid" if form.company_email.errors else "")) }}
+              {% for error in form.company_email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.company_neighborhood.label }} *</label>
+              {{ form.company_neighborhood(class="form-select" + (" is-invalid" if form.company_neighborhood.errors else "")) }}
+              {% for error in form.company_neighborhood.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label fw-bold">{{ form.company_address.label }}</label>
+              {{ form.company_address(class="form-control", placeholder="Endereço da sede da imobiliária ou hotel") }}
+            </div>
+          </div>
+
+          <h4 class="font-heading fw-bold mb-3 text-dark"><i class="fa-solid fa-user-lock me-2 text-warning"></i> 2. Credenciais do Usuário Empresário</h4>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.user_name.label }} *</label>
+              {{ form.user_name(class="form-control" + (" is-invalid" if form.user_name.errors else "")) }}
+              {% for error in form.user_name.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.user_email.label }} *</label>
+              {{ form.user_email(class="form-control" + (" is-invalid" if form.user_email.errors else "")) }}
+              {% for error in form.user_email.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.user_phone.label }}</label>
+              {{ form.user_phone(class="form-control") }}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label fw-bold">{{ form.user_password.label }} *</label>
+              {{ form.user_password(class="form-control" + (" is-invalid" if form.user_password.errors else ""), placeholder="Senha que será repassada ao empresário") }}
+              {% for error in form.user_password.errors %}<div class="invalid-feedback">{{ error }}</div>{% endfor %}
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-vn-copper btn-lg px-5 font-heading fw-bold">
+              <i class="fa-solid fa-check-circle me-1"></i> Aprovar Parceria & Salvar Usuário
+            </button>
+            <a href="{{ url_for('admin.company_requests') }}" class="btn btn-outline-secondary btn-lg">Cancelar</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

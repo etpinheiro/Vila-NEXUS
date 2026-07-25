@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block title %}Meus Imóveis Anunciados - {{ app_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="font-heading fw-bold mb-0">Gerenciar Meus Imóveis</h1>
+      <p class="text-muted mb-0">Cadastre, edite fotos, altere preços ou atualize a disponibilidade dos seus anúncios.</p>
+    </div>
+    <a href="{{ url_for('entrepreneur.property_create') }}" class="btn btn-vn-copper">
+      <i class="fa-solid fa-plus me-1"></i> Publicar Novo Imóvel
+    </a>
+  </div>
+
+  <div class="card card-brutalist p-4">
+    <div class="table-responsive">
+      <table class="table table-brutalist align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Imóvel</th>
+            <th>Finalidade</th>
+            <th>Tipo</th>
+            <th>Preço</th>
+            <th>Bairro</th>
+            <th>Status</th>
+            <th>Visualizações</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prop in properties %}
+            <tr>
+              <td>
+                <div class="d-flex align-items-center">
+                  <img src="{{ prop.primary_image_url() }}" style="width: 60px; height: 60px; object-fit: cover;" class="rounded border me-2">
+                  <div>
+                    <a href="{{ url_for('main.property_detail', id=prop.id) }}" class="fw-bold text-dark text-decoration-none" target="_blank">
+                      {{ prop.title }}
+                    </a>
+                    {% if prop.is_highlighted %}
+                      <span class="badge bg-warning text-dark border ms-1"><i class="fa-solid fa-bolt"></i> Destaque</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-vn badge-vn-{{ prop.purpose.lower() }}">{{ prop.purpose }}</span></td>
+              <td>{{ prop.property_type }}</td>
+              <td class="fw-bold text-success">{{ prop.formatted_price() }}</td>
+              <td>{{ prop.neighborhood }}</td>
+              <td>
+                <span class="badge bg-{{ 'success' if prop.status == 'disponivel' else 'warning' }} text-dark border">
+                  {{ prop.status.upper() }}
+                </span>
+              </td>
+              <td><i class="fa-solid fa-eye text-muted me-1"></i> {{ prop.views_count }}</td>
+              <td>
+                <div class="d-flex gap-1">
+                  <a href="{{ url_for('entrepreneur.property_edit', id=prop.id) }}" class="btn btn-sm btn-outline-dark" title="Editar">
+                    <i class="fa-solid fa-pen"></i>
+                  </a>
+                  <form method="POST" action="{{ url_for('entrepreneur.property_delete', id=prop.id) }}" onsubmit="return confirm('Tem certeza que deseja excluir este imóvel?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Excluir">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          {% else %}
+            <tr>
+              <td colspan="8" class="text-center text-muted py-4">Nenhum imóvel cadastrado. Clique no botão acima para adicionar.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
