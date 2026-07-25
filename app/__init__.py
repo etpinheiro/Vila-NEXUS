@@ -24,13 +24,6 @@ def create_app(config_class=Config):
     login_manager.init_app(app)
     csrf.init_app(app)
 
-    # Cria tabelas automaticamente ao iniciar.
-    # - Em produção (Supabase/PostgreSQL): cria todas as tabelas no banco remoto
-    #   caso ainda não existam, sem apagar dados existentes.
-    # - Em desenvolvimento (SQLite local): mesmo comportamento, sem efeitos colaterais.
-    with app.app_context():
-        db.create_all()
-
     # Register Blueprints
     from app.blueprints.main import main_bp
     from app.blueprints.auth import auth_bp
@@ -43,6 +36,15 @@ def create_app(config_class=Config):
     app.register_blueprint(entrepreneur_bp, url_prefix='/empresario')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(api_bp, url_prefix='/api')
+
+    # Importa TODOS os modelos antes do create_all para garantir que o SQLAlchemy
+    # conheça todas as tabelas e possa criá-las corretamente no Supabase.
+    with app.app_context():
+        from app.models.user import User                                          # noqa: F401
+        from app.models.company import Company, CompanyRegistrationRequest        # noqa: F401
+        from app.models.property import Property, PropertyImage                   # noqa: F401
+        from app.models.client_interactions import Favorite, VisitRequest, SavedSearch  # noqa: F401
+        db.create_all()
 
     # Global Jinja context variables
     @app.context_processor
